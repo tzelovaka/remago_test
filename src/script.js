@@ -17,8 +17,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 //освещение
-const light = new THREE.AmbientLight( 0xFFE2B7 ); // желтовато-белый свет
-scene.add( light );
+const spotLight = new THREE.SpotLight(0xffffff, 1000);
+spotLight.position.set(0, 20, 20);
+spotLight.shadow.camera.near = 10; 
+spotLight.shadow.camera.far = 200;
+scene.add(spotLight);
 
 //контроллеры
 const controls = new OrbitControls(camera, renderer.domElement);
