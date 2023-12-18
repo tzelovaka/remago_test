@@ -17,9 +17,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 //освещение
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.61);
-hemiLight.position.set(0, 15, 0);
-scene.add(hemiLight);
+const light = new THREE.AmbientLight( 0xFFE2B7 ); // желтовато-белый свет
+scene.add( light );
 
 //контроллеры
 const controls = new OrbitControls(camera, renderer.domElement);
