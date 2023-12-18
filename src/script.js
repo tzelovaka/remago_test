@@ -4,61 +4,62 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const loader = new GLTFLoader();
 
-let mixer = null;
-
 const scene = new THREE.Scene();
 
+//камера
+const camera = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 1, 1000);
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new THREE.WebGLRenderer();
+
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+//освещение
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.61);
 hemiLight.position.set(0, 15, 0);
 scene.add(hemiLight);
 
-const spotLight = new THREE.SpotLight(0xeeeece);
-spotLight.position.set(1000, 1000, 1000);
-scene.add(spotLight);
-
-const spotLight2 = new THREE.SpotLight(0xffffff);
-spotLight2.position.set(-200, -200, -200);
-scene.add(spotLight2);
-
+//контроллеры
 const controls = new OrbitControls(camera, renderer.domElement);
 camera.position.set(0, 20, 100);
 controls.update();
 let bot;
+
+//загрузка 3D-модели
 loader.load(
   "./b.gltf",
-  (gltf) => {
+  (gltf) => { 
+    gltf.scene.position.set(0, -5, 0);
     bot = gltf;
-    pivot.add(bot.scene.children[23]);
-    gltf.scene.scale.set(1, 1, 1);
-    scene.add(bot.scene);
     console.log(gltf);
+    pivot.add(bot.scene.children[23]);
+    pivot.position.y = -5;
+    pivot.rotation.y = 2.5;
+    bot.scene.scale.set(1, 1, 1);
+    bot.scene.rotation.y = 2.5
+    scene.add(bot.scene);
   },
   undefined,
   function (error) {
     console.error(error);
   }
 );
+
+//часы
 const clock = new THREE.Clock();
+
+//оболчка для модели для корректной анимации
 const pivot = new THREE.Object3D();
 scene.add(pivot);
 
+//рендер + анимация
 const tick = () => {
   controls.update();
   renderer.render(scene, camera);
   const delta = clock.getDelta();
-  
-  // Rotate the pivot
   pivot.rotation.y += 0.005;
-  
-  if (mixer){
-    mixer.update(delta);
-  }
   window.requestAnimationFrame(tick);
 }
 tick();
